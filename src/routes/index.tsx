@@ -1,7 +1,10 @@
+import CheckRounded from "@mui/icons-material/CheckRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
+import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,9 +12,11 @@ import Typography from "@mui/material/Typography";
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute } from "@tanstack/react-router";
 import ky from "ky";
+import ReactCountDown from "react-countdown";
 import { toast } from "react-toastify";
 import z from "zod";
 import { GridPatch } from "#/components/grid-patch";
+import { QRCodeCard } from "#/components/qr-code-card";
 import { QuestionStatusSchema } from "#/types/schemas/question";
 
 export const Route = createFileRoute("/")({
@@ -32,17 +37,13 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const form = useForm({
-    defaultValues: { question: localStorage.getItem("q-draft") ?? "" },
+    defaultValues: {
+      question: localStorage.getItem("q-draft") ?? "",
+    },
     validators: {
       onChange: z.object({
         question: z.string().normalize().nonempty().max(200),
       }),
-    },
-    listeners: {
-      onChangeDebounceMs: 500,
-      onChange: ({ formApi }) => {
-        localStorage.setItem("q-draft", formApi.state.values.question);
-      },
     },
     onSubmit: async ({ value }) => {
       return ky
@@ -64,21 +65,56 @@ function Home() {
   return (
     <Container maxWidth="md">
       <GridPatch />
-      <Box sx={{ paddingY: 4 }}>
+      <Box sx={{ paddingY: 8 }}>
         <Stack spacing={8}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontFamily: `"Stix Two Text Variable"`,
-              fontStyle: "italic",
-              textDecorationLine: "underline",
-              textDecorationStyle: "double",
-              textDecorationColor: (t) => t.palette.secondary.light,
-              color: (t) => t.palette.secondary.main,
-            }}
-          >
-            {`Send a Question!`}
-          </Typography>
+          <Paper variant="outlined" sx={{ padding: 6 }}>
+            <Stack
+              spacing={4}
+              direction={"row"}
+              sx={{ justifyContent: "space-between" }}
+              divider={<Divider flexItem orientation="vertical" />}
+            >
+              <Stack spacing={2}>
+                <ReactCountDown
+                  daysInHours
+                  zeroPadTime={2}
+                  date={new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)}
+                  renderer={({ formatted }) => {
+                    return (
+                      <Typography
+                        sx={{ fontFamily: "monospace" }}
+                        variant="h2"
+                        color="secondary"
+                      >
+                        {`${formatted.hours}h${formatted.minutes}m${formatted.seconds}s`}
+                      </Typography>
+                    );
+                  }}
+                />
+                <Typography
+                  sx={{ fontFamily: `"Stix two text variable"` }}
+                  color="secondary"
+                >
+                  {`until question closed`}
+                </Typography>
+              </Stack>
+              <Stack spacing={2}>
+                <Typography
+                  sx={{ fontFamily: "monospace" }}
+                  variant="h2"
+                  color="secondary"
+                >
+                  {`08/50`}
+                </Typography>
+                <Typography
+                  sx={{ fontFamily: `"Stix two text variable"` }}
+                  color="secondary"
+                >
+                  {`questions asked`}
+                </Typography>
+              </Stack>
+            </Stack>
+          </Paper>
           <Stack
             spacing={4}
             component={"form"}
@@ -88,7 +124,29 @@ function Home() {
               form.handleSubmit();
             }}
           >
-            <form.Field name="question">
+            <Typography
+              variant="h1"
+              sx={{
+                fontFamily: `"Stix Two Text Variable"`,
+                fontStyle: "italic",
+                textDecorationLine: "underline",
+                textDecorationStyle: "double",
+                textDecorationColor: (t) => t.palette.secondary.light,
+                color: (t) => t.palette.secondary.main,
+              }}
+            >
+              {`Send a Question!`}
+            </Typography>
+
+            <form.Field
+              name="question"
+              listeners={{
+                onChangeDebounceMs: 750,
+                onChange: ({ value }) => {
+                  localStorage.setItem("q-draft", value);
+                },
+              }}
+            >
               {(field) => (
                 <TextField
                   fullWidth
@@ -99,7 +157,12 @@ function Home() {
                   multiline
                   minRows={4}
                   helperText={
-                    <Typography variant="caption" fontFamily={"monospace"}>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontFamily: `"Stix two text variable"`,
+                      }}
+                    >
                       {`${field.state.value.length}/200`}
                     </Typography>
                   }
@@ -126,11 +189,27 @@ function Home() {
               variant="dense"
               sx={{ justifyContent: "flex-end" }}
             >
-              <Button variant="contained" type="submit" color="secondary">
-                {`Send`}
-              </Button>
+              <form.Subscribe
+                selector={({ canSubmit, isValid }) => {
+                  return { canSubmit, isValid };
+                }}
+              >
+                {({ canSubmit, isValid }) => (
+                  <Button
+                    endIcon={<CheckRounded />}
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                    disabled={!canSubmit || !isValid}
+                  >
+                    {`Send`}
+                  </Button>
+                )}
+              </form.Subscribe>
             </Toolbar>
           </Stack>
+
+          <QRCodeCard />
         </Stack>
       </Box>
     </Container>

@@ -58,7 +58,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <ThemeProvider theme={MAIN_THEME}>
             <CssBaseline />
             {children}
-            <ToastContainer closeOnClick />
+            <ToastContainer
+              closeOnClick
+              style={{ fontFamily: `"Roboto variable"`, userSelect: "none" }}
+            />
           </ThemeProvider>
         </CacheProvider>
         <TanStackDevtools
