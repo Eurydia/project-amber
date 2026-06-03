@@ -13,7 +13,7 @@ export const GridPatch: FC = () => {
         pointerEvents: "none",
         bgcolor: (t) => t.palette.background.paper,
         backgroundImage: (t) => {
-          const lineColor = t.alpha(t.palette.secondary.main, 0.54);
+          const lineColor = t.alpha(t.palette.secondary.main, 0.2);
           return `
           linear-gradient(to right, ${lineColor} 1px, transparent 1px),
           linear-gradient(to bottom, ${lineColor} 1px, transparent 1px)

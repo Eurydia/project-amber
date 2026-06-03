@@ -1,3 +1,4 @@
+import ArrowRightAltRoundedIcon from "@mui/icons-material/ArrowRightAltRounded";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -15,6 +16,7 @@ import { QNAForm } from "#/components/form/qna.form";
 import { GridPatch } from "#/components/grid-patch";
 import { QnaCard } from "#/components/qna-card";
 import { QRCodeCard } from "#/components/qr-code-card";
+import { RouterButton } from "#/components/router-button";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 import { signOutGoogle } from "#/integrations/auth/auth-client";
 import { getQnaSession, getQuestions, submitQuestion } from "#/server/db";
@@ -39,11 +41,7 @@ export const Route = createFileRoute("/")({
     return {
       data: {
         qnaStatus: qnaSession,
-        submissions: res.map((sub) => ({
-          id: sub.id,
-          q: sub.question,
-          a: sub.answer?.answer ?? null,
-        })),
+        submissions: res,
       },
     };
   },
@@ -78,28 +76,46 @@ function Home() {
             {data !== null && <CountdownCard status={data.qnaStatus} />}
             {data !== null && (
               <Paper sx={{ padding: 6 }} variant="outlined">
+                <QNAForm
+                  onSubmit={(value) => {
+                    handleSubmit({ data: { question: value } }).then((res) => {
+                      if (!res) {
+                        toast.error("ERR");
+                      } else {
+                        toast.success("OK");
+                        router.invalidate();
+                      }
+                    });
+                  }}
+                />
+              </Paper>
+            )}
+            {data !== null && (
+              <Paper sx={{ padding: 6 }} variant="outlined">
                 <Stack spacing={3}>
-                  <QNAForm
-                    onSubmit={(value) => {
-                      handleSubmit({ data: { question: value } }).then(
-                        (res) => {
-                          if (!res) {
-                            toast.error("ERR");
-                          } else {
-                            toast.success("OK");
-                            router.invalidate();
-                          }
-                        },
-                      );
+                  <Stack
+                    direction={"row"}
+                    sx={{
+                      justifyContent: "space-between",
                     }}
-                  />
-                  <Typography
-                    color="secondary"
-                    variant="caption"
-                    sx={{ fontWeight: 700 }}
                   >
-                    {`My question(s)`}
-                  </Typography>
+                    <Typography
+                      color="secondary"
+                      variant="caption"
+                      sx={{ fontWeight: 700 }}
+                    >
+                      {`My question(s)`}
+                    </Typography>
+                    <RouterButton
+                      color="secondary"
+                      to="/all"
+                      variant="text"
+                      size="small"
+                      endIcon={<ArrowRightAltRoundedIcon />}
+                    >
+                      {`See other questions`}
+                    </RouterButton>
+                  </Stack>
                   {data.submissions.map((sub) => (
                     <QnaCard key={sub.id} data={sub} />
                   ))}

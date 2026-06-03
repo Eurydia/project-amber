@@ -1,15 +1,5 @@
+import { brown, grey, yellow } from "@mui/material/colors";
 import {
-  blue,
-  blueGrey,
-  brown,
-  deepPurple,
-  grey,
-  orange,
-  purple,
-  yellow,
-} from "@mui/material/colors";
-import {
-  alpha,
   createTheme,
   lighten,
   responsiveFontSizes,

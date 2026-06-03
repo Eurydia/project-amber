@@ -1,4 +1,4 @@
-import { createServerFn, createServerOnlyFn } from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import z from "zod";
 import { prisma } from "#/db";
@@ -29,7 +29,11 @@ export const getQuestions = createServerFn({ method: "GET" })
         answer: true,
       },
     });
-    return res;
+    return res.map(({ answer, id, question }) => ({
+      id: String(id),
+      answer: answer?.answer ?? null,
+      questions: [{ question, id: String(id) }],
+    }));
   });
 
 export const getQnaSession = createServerFn({ method: "GET" }).handler(
@@ -99,5 +103,9 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
 
     result.push(...group.values());
 
-    return result;
+    return {
+      result,
+      totalPageCount: Math.ceil((await prisma.question.count()) / 25),
+      currPageIndex: data.page,
+    };
   });
