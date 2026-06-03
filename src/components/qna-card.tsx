@@ -20,12 +20,12 @@ export const QnaCard: FC<{
                 <Typography
                   variant="caption"
                   color="secondary"
-                  sx={{ fontWeight: 700 }}
+                  sx={{ fontWeight: 700, textAlign: "right" }}
                 >
                   {`Question`}
                 </Typography>
               </Grid>
-              <Grid size={{ lg: "auto" }}>
+              <Grid size={{ lg: 10 }}>
                 <Typography color="secondary">{question.question}</Typography>
               </Grid>
             </Fragment>
@@ -42,7 +42,7 @@ export const QnaCard: FC<{
                 {`Answer`}
               </Typography>
             </Grid>
-            <Grid size={{ lg: "auto" }}>
+            <Grid size={{ lg: 10 }}>
               <Typography color="secondary">{props.data.answer}</Typography>
             </Grid>
           </Grid>

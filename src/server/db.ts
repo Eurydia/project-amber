@@ -66,6 +66,7 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
     const group = new Map<
       string,
       {
+        id: string;
         answer: string | null;
         questions: Array<{ id: string; question: string }>;
       }
@@ -73,6 +74,7 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
     const result: Array<{
       questions: Array<{ id: string; question: string }>;
       answer: string | null;
+      id: string;
     }> = [];
 
     for (const row of await prisma.question.findMany({
@@ -87,6 +89,7 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
         result.push({
           questions: [{ id: String(row.id), question: row.question }],
           answer: null,
+          id: String(row.id),
         });
         continue;
       }
@@ -95,6 +98,7 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
         g.questions.push({ id: String(row.id), question: row.question });
       } else {
         group.set(row.answerId, {
+          id: String(row.id),
           answer: row.answer?.answer ?? null,
           questions: [{ id: String(row.id), question: row.question }],
         });
