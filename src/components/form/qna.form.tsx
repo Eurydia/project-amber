@@ -14,7 +14,7 @@ export const QNAForm: FC<{
 }> = (props) => {
   const form = useForm({
     defaultValues: {
-      question: localStorage.getItem("q-draft") ?? "",
+      question: "",
     },
     validationLogic: revalidateLogic(),
     validators: {
@@ -39,15 +39,7 @@ export const QNAForm: FC<{
       <Typography color="secondary" sx={{ fontWeight: 700 }}>
         {`Question`}
       </Typography>
-      <form.Field
-        name="question"
-        listeners={{
-          onChangeDebounceMs: 750,
-          onChange: ({ value }) => {
-            localStorage.setItem("q-draft", value);
-          },
-        }}
-      >
+      <form.Field name="question">
         {(field) => (
           <TextField
             fullWidth

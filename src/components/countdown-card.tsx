@@ -9,11 +9,11 @@ export const CountdownCard: FC<{
   status:
     | {
         qnaOpen: true;
-        openUntil: string;
+        openUntil: Date;
       }
     | {
         qnaOpen: false;
-        openAt: null | string;
+        openAt: null | Date;
       };
 }> = (props) => {
   return (
@@ -26,7 +26,7 @@ export const CountdownCard: FC<{
           <ReactCountDown
             daysInHours
             zeroPadTime={2}
-            date={new Date(props.status.openUntil)}
+            date={props.status.openUntil}
             renderer={({ formatted }) => {
               return (
                 <Typography
@@ -42,12 +42,7 @@ export const CountdownCard: FC<{
           />
         </Stack>
       ) : props.status.openAt === null ? (
-        <Typography
-          variant="h2"
-          color="secondary"
-          component={"div"}
-          sx={{ textAlign: "center" }}
-        >
+        <Typography variant="h2" color="secondary" component={"div"}>
           {`Q&A is closed. It won't be accepting questions anytime soon.🚧`}
         </Typography>
       ) : dayjs(props.status.openAt).diff(Date.now(), "hour") > 24 ? (

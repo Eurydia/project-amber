@@ -1,14 +1,40 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
+  runtime  = "cloudflare"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-model Todo {
-  id        Int      @id @default(autoincrement())
-  title     String
-  createdAt DateTime @default(now())
+model QnaSession {
+  id        Int        @id @default(autoincrement())
+  openAt    DateTime
+  openUntil DateTime
+
+  createdAt DateTime   @default(now())
+
+  @@index([openAt, openUntil])
+}
+
+model Question {
+  id        Int        @id @default(autoincrement())
+  question  String
+  sender    String
+  sentAt    DateTime   @default(now())
+
+  answerId  String?
+  answer    Answer?    @relation(fields: [answerId], references: [id], onDelete: SetNull)
+
+  @@index([sentAt])
+  @@index([answerId])
+}
+
+model Answer {
+  id         String     @id @default(cuid())
+  answer     String
+  answeredAt DateTime   @default(now())
+
+  questions  Question[]
 }

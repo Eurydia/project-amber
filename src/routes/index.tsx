@@ -1,15 +1,13 @@
 import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import Fab from "@mui/material/Fab";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import ky from "ky";
-import { QRCodeCanvas } from "qrcode.react";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "react-toastify";
 import { CountdownCard } from "#/components/countdown-card";
 import { LoginDialog } from "#/components/form/login-dialog";
@@ -17,25 +15,36 @@ import { QNAForm } from "#/components/form/qna.form";
 import { GridPatch } from "#/components/grid-patch";
 import { QnaCard } from "#/components/qna-card";
 import { QRCodeCard } from "#/components/qr-code-card";
-import { getSession } from "#/integrations/auth/auth";
+import { getServerAuthSession } from "#/integrations/auth/auth";
 import { signOutGoogle } from "#/integrations/auth/auth-client";
-import { QuestionStatusSchema } from "#/types/schemas/question";
+import { getQnaSession, getQuestions, submitQuestion } from "#/server/db";
 
 export const Route = createFileRoute("/")({
-  ssr: "data-only",
+  ssr: false,
   component: Home,
   loader: async ({ context }) => {
     if (context.session === null) {
       return { data: null };
     }
+
+    const qnaSession = await getQnaSession();
+    const res = await getQuestions({
+      data: { id: context.session.user.email },
+    });
+
     return {
-      data: await ky
-        .get("/api/q", { baseUrl: "http://localhost:3000" })
-        .json(QuestionStatusSchema),
+      data: {
+        qnaStatus: qnaSession,
+        submissions: res.map((sub) => ({
+          id: sub.id,
+          q: sub.question,
+          a: sub.answer?.answer ?? null,
+        })),
+      },
     };
   },
   beforeLoad: async () => {
-    const session = await getSession();
+    const session = await getServerAuthSession();
     return { session };
   },
 });
@@ -44,6 +53,9 @@ function Home() {
   const { session } = Route.useRouteContext();
   const { data } = Route.useLoaderData();
   const router = useRouter();
+
+  const fn = useServerFn(submitQuestion);
+
   return (
     <>
       <Container maxWidth="md">
@@ -58,6 +70,7 @@ function Home() {
                 textDecorationStyle: "double",
                 textDecorationColor: (t) => t.palette.secondary.light,
                 color: (t) => t.palette.secondary.main,
+                textAlign: "center",
               }}
             >
               {`Send a Question!`}
@@ -65,27 +78,22 @@ function Home() {
             {data !== null && <CountdownCard status={data.qnaStatus} />}
             {data !== null && (
               <Paper sx={{ padding: 6 }} variant="outlined">
-                {data.submission.q === null ? (
+                <Stack spacing={3}>
                   <QNAForm
-                    onSubmit={(value) =>
-                      ky
-                        .post("/admin/api/q", {
-                          baseUrl: import.meta.env.VITE_APP_ORIGIN,
-                          json: value,
-                        })
-                        .then((res) => {
-                          toast.success("OK");
-                          return res;
-                        })
-                        .catch((res) => {
-                          toast.warn("Failed");
-                          return res;
-                        })
-                    }
+                    onSubmit={(value) => {
+                      fn({ data: { question: value } }).then((res) => {
+                        if (!res) {
+                          toast.error("ERR");
+                        }
+                        toast.success("OK");
+                        router.invalidate();
+                      });
+                    }}
                   />
-                ) : (
-                  <QnaCard data={data.submission} />
-                )}
+                  {data.submissions.map((sub) => (
+                    <QnaCard key={sub.id} data={sub} />
+                  ))}
+                </Stack>
               </Paper>
             )}
             <QRCodeCard />

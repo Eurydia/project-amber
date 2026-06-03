@@ -12,7 +12,7 @@ export const authService = betterAuth({
   },
 });
 
-export const getSession = createServerFn({ method: "GET" }).handler(
+export const getServerAuthSession = createServerFn({ method: "GET" }).handler(
   async () => {
     return authService.api.getSession({
       headers: getRequestHeaders(),
