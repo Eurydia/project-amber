@@ -1,7 +1,7 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, createServerOnlyFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import z from "zod";
-import { createPrisma } from "#/db";
+import { prisma } from "#/db";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 
 export const submitQuestion = createServerFn({ method: "POST" })
@@ -15,7 +15,7 @@ export const submitQuestion = createServerFn({ method: "POST" })
     if (session === null) {
       return false;
     }
-    const prisma = createPrisma();
+
     return await prisma.question.create({
       data: { question: data.question, sender: session.user.email },
     });
@@ -23,7 +23,6 @@ export const submitQuestion = createServerFn({ method: "POST" })
 export const getQuestions = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().nonempty() }))
   .handler(async ({ data }) => {
-    const prisma = createPrisma();
     const res = await prisma.question.findMany({
       where: { sender: data.id },
       include: {
@@ -37,7 +36,6 @@ export const getQnaSession = createServerFn({ method: "GET" }).handler(
   async (): Promise<
     { qnaOpen: false; openAt: null | Date } | { qnaOpen: true; openUntil: Date }
   > => {
-    const prisma = createPrisma();
     const res = await prisma.qnaSession.findFirst({
       orderBy: { createdAt: "desc" },
     });
@@ -57,3 +55,49 @@ export const getQnaSession = createServerFn({ method: "GET" }).handler(
     return { qnaOpen: true, openUntil: res.openUntil };
   },
 );
+
+export const getAggregatedQuestions = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ page: z.number().int().nonnegative() }))
+  .handler(async ({ data }) => {
+    const group = new Map<
+      string,
+      {
+        answer: string | null;
+        questions: Array<{ id: string; question: string }>;
+      }
+    >();
+    const result: Array<{
+      questions: Array<{ id: string; question: string }>;
+      answer: string | null;
+    }> = [];
+
+    for (const row of await prisma.question.findMany({
+      include: { answer: true },
+      take: 25,
+      skip: data.page * 25,
+      orderBy: {
+        sentAt: "desc",
+      },
+    })) {
+      if (row.answerId === null) {
+        result.push({
+          questions: [{ id: String(row.id), question: row.question }],
+          answer: null,
+        });
+        continue;
+      }
+      const g = group.get(row.answerId);
+      if (g !== undefined) {
+        g.questions.push({ id: String(row.id), question: row.question });
+      } else {
+        group.set(row.answerId, {
+          answer: row.answer?.answer ?? null,
+          questions: [{ id: String(row.id), question: row.question }],
+        });
+      }
+    }
+
+    result.push(...group.values());
+
+    return result;
+  });

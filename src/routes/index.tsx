@@ -22,6 +22,10 @@ import { getQnaSession, getQuestions, submitQuestion } from "#/server/db";
 export const Route = createFileRoute("/")({
   ssr: false,
   component: Home,
+  beforeLoad: async () => {
+    const session = await getServerAuthSession();
+    return { session };
+  },
   loader: async ({ context }) => {
     if (context.session === null) {
       return { data: null };
@@ -43,10 +47,6 @@ export const Route = createFileRoute("/")({
       },
     };
   },
-  beforeLoad: async () => {
-    const session = await getServerAuthSession();
-    return { session };
-  },
 });
 
 function Home() {
@@ -54,7 +54,7 @@ function Home() {
   const { data } = Route.useLoaderData();
   const router = useRouter();
 
-  const fn = useServerFn(submitQuestion);
+  const handleSubmit = useServerFn(submitQuestion);
 
   return (
     <>
@@ -81,15 +81,25 @@ function Home() {
                 <Stack spacing={3}>
                   <QNAForm
                     onSubmit={(value) => {
-                      fn({ data: { question: value } }).then((res) => {
-                        if (!res) {
-                          toast.error("ERR");
-                        }
-                        toast.success("OK");
-                        router.invalidate();
-                      });
+                      handleSubmit({ data: { question: value } }).then(
+                        (res) => {
+                          if (!res) {
+                            toast.error("ERR");
+                          } else {
+                            toast.success("OK");
+                            router.invalidate();
+                          }
+                        },
+                      );
                     }}
                   />
+                  <Typography
+                    color="secondary"
+                    variant="caption"
+                    sx={{ fontWeight: 700 }}
+                  >
+                    {`My question(s)`}
+                  </Typography>
                   {data.submissions.map((sub) => (
                     <QnaCard key={sub.id} data={sub} />
                   ))}
