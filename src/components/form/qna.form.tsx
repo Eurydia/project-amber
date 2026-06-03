@@ -62,7 +62,7 @@ export const QNAForm: FC<{
                 {`${field.state.value.length}/200`}
               </Typography>
             }
-            placeholder="How's the weather"
+            placeholder="How's the weather like in Budapest?"
             slotProps={{
               htmlInput: {
                 autoCapitalize: "false",

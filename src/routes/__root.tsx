@@ -35,12 +35,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Korn's Q&A | SUEA TALK 2026",
       },
     ],
     links: [
       { rel: "stylesheet", href: fontsourceVariableRobotoCss },
       { rel: "stylesheet", href: fontsourceVariableStixTwoTextCss },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
     ],
   }),
   shellComponent: RootDocument,

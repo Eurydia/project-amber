@@ -24,7 +24,7 @@ export const LoginDialog: FC<{ open: boolean }> = (props) => {
             color: (t) => t.palette.secondary.main,
           }}
         >
-          {`Login with an AYW Google account to participate in the Q&A.👇`}
+          {`Login with an AYW Google account to participate in the Q&A.`}
         </Typography>
       </DialogTitle>
       <DialogActions>

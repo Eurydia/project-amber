@@ -93,22 +93,24 @@ function Home() {
         </Box>
       </Container>
       <LoginDialog open={session === null} />
-      <Tooltip title={"Sign out"}>
-        <Fab
-          variant="circular"
-          color="secondary"
-          sx={{ bottom: "16px", right: "16px", position: "fixed" }}
-          onClick={() =>
-            signOutGoogle({
-              onSuccess: async () => {
-                await router.invalidate();
-              },
-            })
-          }
-        >
-          <LogoutIcon />
-        </Fab>
-      </Tooltip>
+      {session !== null && (
+        <Tooltip title={"Sign out"}>
+          <Fab
+            variant="circular"
+            color="secondary"
+            sx={{ bottom: "16px", right: "16px", position: "fixed" }}
+            onClick={() =>
+              signOutGoogle({
+                onSuccess: async () => {
+                  await router.invalidate();
+                },
+              })
+            }
+          >
+            <LogoutIcon />
+          </Fab>
+        </Tooltip>
+      )}
     </>
   );
 }
