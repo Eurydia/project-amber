@@ -1,21 +1,21 @@
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { QRCodeSVG } from "qrcode.react";
 import type { FC } from "react";
 import { toast } from "react-toastify";
 
 export const QRCodeCard: FC = () => {
+  const t = useTheme();
   return (
     <Paper variant="outlined" sx={{ padding: 6 }}>
       <Stack spacing={6} sx={{ alignItems: "center" }}>
         <Typography
           sx={{
             textAlign: "center",
-            fontFamily: `"Stix two text variable"`,
             color: (t) => t.palette.secondary.main,
             fontWeight: 600,
-            fontSize: "x-large",
           }}
           component={"span"}
         >
@@ -29,8 +29,6 @@ export const QRCodeCard: FC = () => {
               textDecorationColor: (t) => t.palette.secondary.light,
               color: (t) => t.palette.secondary.main,
               fontWeight: 600,
-              fontSize: "x-large",
-              fontFamily: `"Stix two text variable"`,
               cursor: "pointer",
               fontStyle: "italic",
             }}
@@ -38,10 +36,10 @@ export const QRCodeCard: FC = () => {
               window.navigator.clipboard
                 .writeText(window.location.href)
                 .then(() => {
-                  toast.info("URL copied to clipboard!");
+                  toast.info("Link copied to clipboard!");
                 })
                 .catch(() => {
-                  toast.error("Couldn't copy URL to clipboard :(");
+                  toast.error("Couldn't copy link to clipboard :(");
                 });
             }}
           >
@@ -50,6 +48,7 @@ export const QRCodeCard: FC = () => {
           <span>{` to copy the link to this page.`}</span>
         </Typography>
         <QRCodeSVG
+          bgColor={t.palette.background.paper}
           value={window.location.href}
           level="H"
           style={{
