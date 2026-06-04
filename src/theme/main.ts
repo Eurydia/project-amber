@@ -10,9 +10,9 @@ let MAIN_THEME = createTheme({
       contrastText: "#FBF7E8",
     },
     success: {
-      main: "#738060",
-      light: "#A4AF91",
-      dark: "#536044",
+      main: "#66836D",
+      light: "#98AD9D",
+      dark: "#48604F",
       contrastText: "#FFFDF4",
     },
     background: {
@@ -34,25 +34,35 @@ let MAIN_THEME = createTheme({
     },
   },
   typography: {
-    fontFamily: '"DM Sans variable", sans-serif',
+    fontFamily: '"DM Sans", sans-serif',
+
     h1: {
-      fontFamily: '"Fraunces variable", Georgia, serif',
+      fontFamily: '"Fraunces", Georgia, serif',
       fontWeight: 600,
+      letterSpacing: "-0.085em",
     },
+
     h2: {
-      fontFamily: '"Fraunces variable", Georgia, serif',
+      fontFamily: '"Fraunces", Georgia, serif',
       fontWeight: 600,
+      letterSpacing: "-0.055em",
     },
+
     h3: {
-      fontFamily: '"Fraunces variable", Georgia, serif',
+      fontFamily: '"Fraunces", Georgia, serif',
       fontWeight: 600,
+      letterSpacing: "-0.05em",
     },
+
     caption: {
       fontWeight: 700,
+      letterSpacing: "0.17em",
       textTransform: "uppercase",
     },
+
     button: {
       fontWeight: 700,
+      letterSpacing: "0.1em",
       textTransform: "uppercase",
     },
   },

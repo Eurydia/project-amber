@@ -15,7 +15,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import dayjs from "dayjs";
 import dayjsRelTime from "dayjs/plugin/relativeTime";
-import { ToastContainer } from "react-toastify";
+import { ThemedToastContainer } from "#/components/toast/themed-toast-container";
 import { MAIN_THEME } from "#/theme/main";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
@@ -61,7 +61,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <ThemeProvider theme={MAIN_THEME}>
             <CssBaseline />
             {children}
-            <ToastContainer
+            <ThemedToastContainer
               closeOnClick
               style={{ fontFamily: `"Roboto variable"`, userSelect: "none" }}
             />

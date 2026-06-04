@@ -90,7 +90,6 @@ function Home() {
                 />
               </Paper>
             )}
-            {data !== null && (
             {data !== null && data.submissions.length > 0 && (
               <Paper sx={{ padding: 6 }} variant="outlined">
                 <Stack spacing={3}>
