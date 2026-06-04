@@ -23,12 +23,14 @@ export const submitQuestion = createServerFn({ method: "POST" })
 export const getQuestions = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().nonempty() }))
   .handler(async ({ data }) => {
-    const res = await prisma.question.findMany({
-      where: { sender: data.id },
-      include: {
-        answer: true,
-      },
-    });
+    const res = await prisma.question
+      .findMany({
+        where: { sender: data.id },
+        include: {
+          answer: true,
+        },
+      })
+      .catch(() => []);
     return res.map(({ answer, id, question }) => ({
       id: String(id),
       answer: answer?.answer ?? null,
@@ -40,9 +42,11 @@ export const getQnaSession = createServerFn({ method: "GET" }).handler(
   async (): Promise<
     { qnaOpen: false; openAt: null | Date } | { qnaOpen: true; openUntil: Date }
   > => {
-    const res = await prisma.qnaSession.findFirst({
-      orderBy: { createdAt: "desc" },
-    });
+    const res = await prisma.qnaSession
+      .findFirst({
+        orderBy: { createdAt: "desc" },
+      })
+      .catch(() => null);
 
     if (res === null) {
       return { qnaOpen: false, openAt: null };

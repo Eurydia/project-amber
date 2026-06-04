@@ -11,34 +11,18 @@ import { QRCodeCard } from "../qr-code-card";
 
 export const LoginDialog: FC<{ open: boolean }> = (props) => {
   return (
-    <Dialog
-      scroll="body"
-      open={props.open}
-      maxWidth="md"
-      fullWidth
-      slotProps={{ backdrop: { sx: { backdropFilter: "blur(2px)" } } }}
-    >
-      <DialogTitle>
-        <Typography
-          sx={{
-            color: (t) => t.palette.secondary.main,
-          }}
-        >
+    <Dialog scroll="body" open={props.open} maxWidth="md" fullWidth>
+      <DialogContent>
+        <Typography>
           {`Login with an AYW Google account to participate in the Q&A.`}
         </Typography>
-      </DialogTitle>
-      <DialogActions>
         <Button
-          color="secondary"
           variant="contained"
           startIcon={<GoogleIcon />}
           onClick={signInGoogle}
         >
           {`Sign in with Google`}
         </Button>
-      </DialogActions>
-      <DialogContent>
-        <QRCodeCard />
       </DialogContent>
     </Dialog>
   );

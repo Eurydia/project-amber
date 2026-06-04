@@ -1,7 +1,8 @@
 import createEmotionCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
+import fontsourceVariableDmsansCss from "@fontsource-variable/dm-sans?url";
+import fontsourceVariableFrauncesCss from "@fontsource-variable/fraunces?url";
 import fontsourceVariableRobotoCss from "@fontsource-variable/roboto?url";
-import fontsourceVariableStixTwoTextCss from "@fontsource-variable/stix-two-text?url";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { TanStackDevtools } from "@tanstack/react-devtools";
@@ -40,7 +41,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
     links: [
       { rel: "stylesheet", href: fontsourceVariableRobotoCss },
-      { rel: "stylesheet", href: fontsourceVariableStixTwoTextCss },
+      { rel: "stylesheet", href: fontsourceVariableDmsansCss },
+      { rel: "stylesheet", href: fontsourceVariableFrauncesCss },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
     ],
   }),
