@@ -92,7 +92,6 @@ function Home() {
               <Grid size={{ md: 10, xs: 12 }}>
                 <CountdownCard status={data.qnaStatus} />
               </Grid>
-
               <Grid size={{ md: 8, xs: 12 }}>
                 <Stack spacing={3}>
                   <Card variant="outlined">
@@ -114,10 +113,12 @@ function Home() {
                       />
                     </CardContent>
                   </Card>
-                  <QuestionList submissions={data.submissions} />
+                  {data.submissions.length > 0 && (
+                    <QuestionList submissions={data.submissions} />
+                  )}
                 </Stack>
               </Grid>
-              <Grid size={{ lg: 4 }}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <Paper variant="outlined" sx={{ padding: 3 }}>
                   <QRCodeCard compact value={window.location.href} />
                 </Paper>

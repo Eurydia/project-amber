@@ -55,7 +55,7 @@ export const QNAForm: FC<{
             minRows={4}
             placeholder={
               props.disable
-                ? `There is no active Q&A session. Drop your question here when the question box is accepting questions.`
+                ? `There is no active Q&A session. Drop your question here when the question box is open.`
                 : "How's the weather like in Budapest?"
             }
             slotProps={{
@@ -113,6 +113,13 @@ export const QNAForm: FC<{
         >
           {({ canSubmit, isValid }) => (
             <Button
+              sx={{
+                textDecorationLine:
+                  !canSubmit || !isValid || props.disable
+                    ? "line-through"
+                    : undefined,
+                textDecorationThickness: 4,
+              }}
               endIcon={
                 !canSubmit || !isValid || props.disable ? (
                   <CancelScheduleSendIcon />

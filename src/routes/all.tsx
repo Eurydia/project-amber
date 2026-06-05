@@ -110,8 +110,8 @@ function RouteComponent() {
         <Box sx={{ paddingY: 6 }}>
           <Stack spacing={3}>
             {result.length === 0 ? (
-              <Typography variant="caption" color="secondary">
-                {`Nothing to see here...`}
+              <Typography variant="caption" color="textSecondary">
+                {`Nothing to see here.`}
               </Typography>
             ) : (
               result.map((sub) => (
@@ -120,19 +120,21 @@ function RouteComponent() {
                 </Box>
               ))
             )}
-            <Toolbar
-              disableGutters
-              variant="dense"
-              sx={{ justifyContent: "center" }}
-            >
-              <Pagination
-                count={totalPageCount}
-                defaultPage={currPageIndex + 1}
-                onChange={(_, page) => {
-                  nav({ to: "/all", search: { page: page - 1 } });
-                }}
-              />
-            </Toolbar>
+            {totalPageCount > 0 && (
+              <Toolbar
+                disableGutters
+                variant="dense"
+                sx={{ justifyContent: "center" }}
+              >
+                <Pagination
+                  count={totalPageCount}
+                  defaultPage={currPageIndex + 1}
+                  onChange={(_, page) => {
+                    nav({ to: "/all", search: { page: page - 1 } });
+                  }}
+                />
+              </Toolbar>
+            )}
           </Stack>
         </Box>
       </Container>

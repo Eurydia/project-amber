@@ -7,7 +7,7 @@ import type { FC } from "react";
 
 export const QnaCard: FC<{
   data: {
-    questions: Array<{ id: string; question: string }>;
+    questions: Array<{ id: string; question: string; visible: boolean }>;
     answer: null | string;
   };
 }> = (props) => {
@@ -50,7 +50,10 @@ export const QnaCard: FC<{
                       {`${String.fromCharCode(97 + i)})`}
                     </Typography>
                   )}
-                  <Typography color="textSecondary">
+                  <Typography
+                    color="textSecondary"
+                    sx={{ textWrap: "wrap", wordBreak: "break-word" }}
+                  >
                     {question.question}
                   </Typography>
                 </Stack>
@@ -70,7 +73,12 @@ export const QnaCard: FC<{
             <Typography variant="caption" color="success">
               {`Answer`}
             </Typography>
-            <Typography color="textSecondary">{props.data.answer}</Typography>
+            <Typography
+              sx={{ lineBreak: "normal", wordBreak: "auto-phrase" }}
+              color="textSecondary"
+            >
+              {props.data.answer}
+            </Typography>
           </CardContent>
         )}
       </Stack>
