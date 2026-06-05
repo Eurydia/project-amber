@@ -7,7 +7,6 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { QRCodeCanvas } from "qrcode.react";
 import type { FC } from "react";
 import { toast } from "react-toastify";
 import { signInGoogle } from "#/integrations/auth/auth-client";
@@ -29,7 +28,9 @@ export const LoginDialog: FC<{ open: boolean }> = (props) => {
                   sx={{ alignItems: "center" }}
                 >
                   <StatusDot />
-                  <Typography variant="caption">{`AYW access required`}</Typography>
+                  <Typography color="textSecondary" variant="caption">
+                    {`AYW access required`}
+                  </Typography>
                 </Stack>
                 <Typography variant="h2" component={"span"}>
                   {`Sign in before you start.`}
