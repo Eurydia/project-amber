@@ -20,7 +20,7 @@ export const submitQuestion = createServerFn({ method: "POST" })
       data: { question: data.question, sender: session.user.email },
     });
   });
-export const getQuestions = createServerFn({ method: "GET" })
+export const getQuestionsFromPerson = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().nonempty() }))
   .handler(async ({ data }) => {
     const res = await prisma.question

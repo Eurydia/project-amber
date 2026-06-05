@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
 import type { FC } from "react";
 import Countdown from "react-countdown";
-import { StatusDot } from "./status-dot";
 
 export const CountdownCard: FC<{
   status:
@@ -24,12 +23,9 @@ export const CountdownCard: FC<{
       {props.status.qnaOpen ? (
         <Stack spacing={6}>
           <Stack spacing={3}>
-            <Stack spacing={2} direction={"row"} sx={{ alignItems: "center" }}>
-              <StatusDot />
-              <Typography variant="caption" color="textSecondary">
-                {`Questions are now being accepted`}
-              </Typography>
-            </Stack>
+            <Typography variant="caption" color="textSecondary">
+              {`Questions are now being accepted`}
+            </Typography>
             <span>
               <Typography variant="h1" component={"span"}>
                 {`The question box is `}
@@ -37,11 +33,11 @@ export const CountdownCard: FC<{
               <Typography
                 variant="h1"
                 component={"span"}
-                color="textDisabled"
+                color="textSecondary"
                 sx={{
                   textDecorationLine: "underline",
                   textDecorationStyle: "double",
-                  textDecorationColor: (t) => t.palette.text.disabled,
+                  textDecorationColor: (t) => t.palette.text.secondary,
                 }}
               >
                 {`open.`}
@@ -58,7 +54,7 @@ export const CountdownCard: FC<{
                 <Typography variant="caption" color="textSecondary">
                   {`Question box closes in`}
                 </Typography>
-                <Chip color="success" variant="outlined" label={`OPEN`} />
+                <Chip color="success" variant="outlined" label={`OPEN NOW`} />
               </Stack>
               <Grid container spacing={{ xs: 3, md: 0 }}>
                 <Grid size={{ md: 7.5, sm: 12 }}>
@@ -124,17 +120,9 @@ export const CountdownCard: FC<{
         </Stack>
       ) : props.status.openAt === null ? (
         <Stack spacing={3}>
-          <Stack
-            useFlexGap
-            spacing={2}
-            direction={"row"}
-            sx={{ alignItems: "center" }}
-          >
-            <StatusDot />
-            <Typography variant="caption" color="textSecondary">
-              {`Nothing scheduled right now`}
-            </Typography>
-          </Stack>
+          <Typography variant="caption" color="textSecondary">
+            {`Nothing scheduled right now`}
+          </Typography>
           <span>
             <Typography variant="h1" component={"span"}>
               {`The question box is `}
@@ -152,20 +140,13 @@ export const CountdownCard: FC<{
               {`resting.`}
             </Typography>
           </span>
-          <Typography>
-            {`There is no upcoming Q&A at the moment. This page will become active
-            again when the next session is scheduled.`}
-          </Typography>
         </Stack>
       ) : dayjs(props.status.openAt).diff(Date.now(), "hour") > 24 ? (
         <Stack spacing={6}>
           <Stack spacing={3}>
-            <Stack spacing={2} direction={"row"} sx={{ alignItems: "center" }}>
-              <StatusDot />
-              <Typography variant="caption" color="textSecondary">
-                {`A new session is scheduled`}
-              </Typography>
-            </Stack>
+            <Typography variant="caption" color="textSecondary">
+              {`A new session is scheduled`}
+            </Typography>
             <span>
               <Typography variant="h1" component={"span"}>
                 {`Questions will be `}
@@ -230,12 +211,9 @@ export const CountdownCard: FC<{
       ) : (
         <Stack spacing={6}>
           <Stack spacing={3}>
-            <Stack spacing={2} direction={"row"} sx={{ alignItems: "center" }}>
-              <StatusDot />
-              <Typography variant="caption" color="textSecondary">
-                {`The next session is less than 24 hours away`}
-              </Typography>
-            </Stack>
+            <Typography variant="caption" color="textSecondary">
+              {`The next session is less than 24 hours away`}
+            </Typography>
             <span>
               <Typography variant="h1" component={"span"}>
                 {`The question box is almost `}

@@ -1,8 +1,10 @@
-import ArrowRightAltRoundedIcon from "@mui/icons-material/ArrowRightAltRounded";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import Fab from "@mui/material/Fab";
+import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,11 +17,15 @@ import { CountdownCard } from "#/components/countdown-card";
 import { LoginDialog } from "#/components/form/login-dialog";
 import { QNAForm } from "#/components/form/qna.form";
 import { GridPatch } from "#/components/grid-patch";
-import { QnaCard } from "#/components/qna-card";
-import { RouterButton } from "#/components/router-button";
+import { QRCodeCard } from "#/components/qr-code-card";
+import { QuestionList } from "#/components/question-list";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 import { signOutGoogle } from "#/integrations/auth/auth-client";
-import { getQnaSession, getQuestions, submitQuestion } from "#/server/db";
+import {
+  getQnaSession,
+  getQuestionsFromPerson,
+  submitQuestion,
+} from "#/server/db";
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -34,7 +40,7 @@ export const Route = createFileRoute("/")({
     }
 
     const qnaSession = await getQnaSession();
-    const res = await getQuestions({
+    const res = await getQuestionsFromPerson({
       data: { id: context.session.user.email },
     });
 
@@ -56,11 +62,12 @@ function Home() {
 
   return (
     <>
+      <GridPatch />
       <Toolbar
         sx={{ justifyContent: "space-between", paddingY: 2 }}
         variant="dense"
       >
-        <Typography variant="caption">{`P'JENG\`s ANNONYMOUS Q&A \u2022 SUEA TALK 2026`}</Typography>
+        <Typography variant="caption">{`P'JENG\`s Q&A \u2022 SUEA TALK 2026`}</Typography>
         {session !== null && (
           <Tooltip title={"Sign out"}>
             <Fab
@@ -78,68 +85,45 @@ function Home() {
           </Tooltip>
         )}
       </Toolbar>
-      <Container maxWidth="md">
-        <GridPatch />
-
+      <Container maxWidth="lg">
         <Box sx={{ paddingY: 6 }}>
-          <Stack spacing={6}>
-            {data !== null && (
-              <CountdownCard
-                status={{
-                  qnaOpen: false,
-                  openAt: new Date("2026-06-05T08:25:00.000Z"),
-                }}
-              />
-            )}
-            {data !== null && (
-              <Paper sx={{ padding: 6 }} variant="outlined">
-                <QNAForm
-                  onSubmit={(value) => {
-                    handleSubmit({ data: { question: value } }).then((res) => {
-                      if (!res) {
-                        toast.error("ERR");
-                      } else {
-                        toast.success("OK");
-                        router.invalidate();
-                      }
-                    });
-                  }}
-                />
-              </Paper>
-            )}
-            {data !== null && data.submissions.length > 0 && (
-              <Paper sx={{ padding: 6 }} variant="outlined">
+          {data !== null && (
+            <Grid container spacing={3}>
+              <Grid size={{ md: 10, xs: 12 }}>
+                <CountdownCard status={data.qnaStatus} />
+              </Grid>
+
+              <Grid size={{ md: 8, xs: 12 }}>
                 <Stack spacing={3}>
-                  <Stack
-                    direction={"row"}
-                    sx={{
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Typography
-                      color="secondary"
-                      variant="caption"
-                      sx={{ fontWeight: 700 }}
-                    >
-                      {`My question(s)`}
-                    </Typography>
-                    <RouterButton
-                      color="secondary"
-                      to="/all"
-                      variant="text"
-                      size="small"
-                      endIcon={<ArrowRightAltRoundedIcon />}
-                    >
-                      {`See other questions`}
-                    </RouterButton>
-                  </Stack>
-                  {data.submissions.map((sub) => (
-                    <QnaCard key={sub.id} data={sub} />
-                  ))}
+                  <Card variant="outlined">
+                    <CardContent>
+                      <QNAForm
+                        disable={!data.qnaStatus.qnaOpen}
+                        onSubmit={(value) => {
+                          handleSubmit({ data: { question: value } }).then(
+                            (res) => {
+                              if (!res) {
+                                toast.error("ERR");
+                              } else {
+                                toast.success("OK");
+                                router.invalidate();
+                              }
+                            },
+                          );
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                  <QuestionList submissions={data.submissions} />
                 </Stack>
-              </Paper>
-            )}
-          </Stack>
+              </Grid>
+              <Grid size={{ lg: 4 }}>
+                <Paper variant="outlined" sx={{ padding: 3 }}>
+                  <QRCodeCard compact value={window.location.href} />
+                </Paper>
+              </Grid>
+            </Grid>
+          )}
         </Box>
       </Container>
       <LoginDialog open={session === null} />

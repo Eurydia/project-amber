@@ -3,13 +3,13 @@ import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { revalidateLogic, useForm } from "@tanstack/react-form";
 import type { FC } from "react";
 import z from "zod";
 
 export const QNAForm: FC<{
+  disable: boolean;
   onSubmit: (v: string) => unknown;
 }> = (props) => {
   const form = useForm({
@@ -28,7 +28,7 @@ export const QNAForm: FC<{
   });
   return (
     <Stack
-      spacing={3}
+      spacing={1}
       component={"form"}
       onSubmit={(e) => {
         e.preventDefault();
@@ -36,12 +36,16 @@ export const QNAForm: FC<{
         form.handleSubmit();
       }}
     >
-      <Typography color="secondary" sx={{ fontWeight: 700 }}>
-        {`Question`}
-      </Typography>
+      <Stack>
+        <Typography variant="caption" color="textSecondary">
+          {`QUESTION box`}
+        </Typography>
+        <Typography variant="h2">{`Send a question`}</Typography>
+      </Stack>
       <form.Field name="question">
         {(field) => (
           <TextField
+            disabled={props.disable}
             fullWidth
             type="text"
             error={!field.state.meta.isValid}
@@ -49,28 +53,59 @@ export const QNAForm: FC<{
             value={field.state.value}
             multiline
             minRows={4}
-            helperText={
-              <Typography variant="caption">
-                {`${field.state.value.length}/200`}
-              </Typography>
+            placeholder={
+              props.disable
+                ? `There is no active Q&A session. Drop your question here when the question box is accepting questions.`
+                : "How's the weather like in Budapest?"
             }
-            placeholder="How's the weather like in Budapest?"
             slotProps={{
+              input: {
+                sx: {
+                  background: props.disable
+                    ? `repeating-linear-gradient(-45deg,rgba(135,109,100,.022),rgba(135,109,100,.022) 8px,transparent 8px,transparent 17px),rgba(255,253,244,.56)`
+                    : undefined,
+                },
+                slotProps: {
+                  notchedOutline: {
+                    sx: {
+                      borderStyle: props.disable ? "dashed" : undefined,
+                      borderColor: (t) =>
+                        props.disable ? t.palette.action.disabled : undefined,
+                    },
+                  },
+                },
+              },
               htmlInput: {
                 autoCapitalize: "false",
                 autoComplete: "false",
                 autoCorrect: "false",
                 spellCheck: "false",
+                sx: {
+                  borderStyle: "dashed",
+                },
               },
             }}
           />
         )}
       </form.Field>
-      <Toolbar
-        disableGutters
-        variant="dense"
-        sx={{ justifyContent: "flex-end" }}
+      <Stack
+        direction={"row"}
+        useFlexGap
+        sx={{ justifyContent: "space-between", alignItems: "center" }}
       >
+        <form.Subscribe
+          selector={({ values }) => {
+            return { values };
+          }}
+        >
+          {({ values }) => {
+            return (
+              <Typography variant="caption" color="textDisabled">
+                {`${values.question.length}/200`}
+              </Typography>
+            );
+          }}
+        </form.Subscribe>
         <form.Subscribe
           selector={({ canSubmit, isValid }) => {
             return { canSubmit, isValid };
@@ -79,22 +114,21 @@ export const QNAForm: FC<{
           {({ canSubmit, isValid }) => (
             <Button
               endIcon={
-                !canSubmit || !isValid ? (
+                !canSubmit || !isValid || props.disable ? (
                   <CancelScheduleSendIcon />
                 ) : (
                   <SendIcon />
                 )
               }
               variant="contained"
-              color="secondary"
               type="submit"
-              disabled={!canSubmit || !isValid}
+              disabled={!canSubmit || !isValid || props.disable}
             >
-              {"Send question"}
+              {"SEND"}
             </Button>
           )}
         </form.Subscribe>
-      </Toolbar>
+      </Stack>
     </Stack>
   );
 };

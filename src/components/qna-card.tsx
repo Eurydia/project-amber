@@ -1,8 +1,9 @@
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { type FC, Fragment } from "react";
+import type { FC } from "react";
 
 export const QnaCard: FC<{
   data: {
@@ -11,43 +12,68 @@ export const QnaCard: FC<{
   };
 }> = (props) => {
   return (
-    <Paper sx={{ padding: 3 }} variant="outlined">
-      <Stack spacing={3}>
-        <Grid container spacing={3}>
-          {props.data.questions.map((question) => (
-            <Fragment key={question.id}>
-              <Grid size={{ lg: 2 }}>
-                <Typography
-                  variant="caption"
-                  color="secondary"
-                  sx={{ fontWeight: 700, textAlign: "right" }}
-                >
-                  {`Question`}
-                </Typography>
-              </Grid>
-              <Grid size={{ lg: 10 }}>
-                <Typography color="secondary">{question.question}</Typography>
-              </Grid>
-            </Fragment>
-          ))}
-        </Grid>
-        {props.data.answer !== null && (
-          <Grid container spacing={3}>
-            <Grid size={{ lg: 2 }}>
+    <Card variant="outlined">
+      <Stack spacing={1}>
+        <CardContent>
+          <Stack spacing={2}>
+            <Stack
+              direction={"row"}
+              useFlexGap
+              sx={{ flexWrap: "nowrap", justifyContent: "space-between" }}
+            >
               <Typography
                 variant="caption"
-                color="secondary"
-                sx={{ fontWeight: 700 }}
+                color="textDisabled"
+                component={"span"}
               >
-                {`Answer`}
+                {props.data.questions.length > 1
+                  ? `Questions (grouped)`
+                  : `Question`}
               </Typography>
-            </Grid>
-            <Grid size={{ lg: 10 }}>
-              <Typography color="secondary">{props.data.answer}</Typography>
-            </Grid>
-          </Grid>
+              <Chip
+                variant={props.data.answer === null ? "outlined" : "filled"}
+                color={props.data.answer === null ? "primary" : "success"}
+                label={props.data.answer === null ? "WAITING" : "ANSWERED"}
+              />
+            </Stack>
+            <Stack spacing={2}>
+              {props.data.questions.map((question, i) => (
+                <Stack
+                  key={question.id}
+                  spacing={1}
+                  direction={"row"}
+                  useFlexGap
+                  sx={{ alignItems: "baseline" }}
+                >
+                  {props.data.questions.length > 1 && (
+                    <Typography variant="caption" color="textDisabled">
+                      {`${String.fromCharCode(97 + i)})`}
+                    </Typography>
+                  )}
+                  <Typography color="textSecondary">
+                    {question.question}
+                  </Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Stack>
+        </CardContent>
+        {props.data.answer !== null && (
+          <CardContent
+            sx={{
+              backgroundColor: (t) => t.palette.background.default,
+              borderTopStyle: "solid",
+              borderTopWidth: 1,
+              borderTopColor: (t) => t.palette.divider,
+            }}
+          >
+            <Typography variant="caption" color="success">
+              {`Answer`}
+            </Typography>
+            <Typography color="textSecondary">{props.data.answer}</Typography>
+          </CardContent>
         )}
       </Stack>
-    </Paper>
+    </Card>
   );
 };
