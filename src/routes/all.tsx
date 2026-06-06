@@ -15,12 +15,21 @@ import { QnaCard } from "#/components/qna-card";
 import { RouterButton } from "#/components/router-button";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 import { signOutGoogle } from "#/integrations/auth/auth-client";
-import { getAggregatedQuestions } from "#/server/db";
+import { getAggregatedQuestions, getQuestionsFromPerson } from "#/server/db";
 
 export const Route = createFileRoute("/all")({
   component: RouteComponent,
   beforeLoad: async () => {
     const session = await getServerAuthSession();
+    if (session === null) {
+      throw redirect({ to: "/" });
+    }
+    const submissions = await getQuestionsFromPerson({
+      data: { id: session.user.email },
+    });
+    if (submissions.length === 0) {
+      throw redirect({ to: "/" });
+    }
     return { session };
   },
   validateSearch: z
@@ -30,11 +39,7 @@ export const Route = createFileRoute("/all")({
   loaderDeps: ({ search }) => {
     return { search };
   },
-  loader: async ({ context, deps }) => {
-    if (context.session === null) {
-      throw redirect({ to: "/" });
-    }
-
+  loader: async ({ deps }) => {
     const res = await getAggregatedQuestions({
       data: { page: deps.search?.page ?? 0 },
     });
@@ -115,7 +120,7 @@ function RouteComponent() {
               </Typography>
             ) : (
               result.map((sub) => (
-                <Box key={sub.answer}>
+                <Box key={sub.id}>
                   <QnaCard data={sub} />
                 </Box>
               ))

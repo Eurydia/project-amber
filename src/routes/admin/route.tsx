@@ -11,6 +11,7 @@ export const Route = createFileRoute("/admin")({
     ) {
       throw redirect({ to: "/" });
     }
+
     return { session };
   },
   loader: () => {},

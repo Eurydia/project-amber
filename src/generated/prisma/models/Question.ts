@@ -39,6 +39,7 @@ export type QuestionMinAggregateOutputType = {
   question: string | null
   sender: string | null
   sentAt: Date | null
+  visible: boolean | null
   answerId: string | null
 }
 
@@ -47,6 +48,7 @@ export type QuestionMaxAggregateOutputType = {
   question: string | null
   sender: string | null
   sentAt: Date | null
+  visible: boolean | null
   answerId: string | null
 }
 
@@ -55,6 +57,7 @@ export type QuestionCountAggregateOutputType = {
   question: number
   sender: number
   sentAt: number
+  visible: number
   answerId: number
   _all: number
 }
@@ -73,6 +76,7 @@ export type QuestionMinAggregateInputType = {
   question?: true
   sender?: true
   sentAt?: true
+  visible?: true
   answerId?: true
 }
 
@@ -81,6 +85,7 @@ export type QuestionMaxAggregateInputType = {
   question?: true
   sender?: true
   sentAt?: true
+  visible?: true
   answerId?: true
 }
 
@@ -89,6 +94,7 @@ export type QuestionCountAggregateInputType = {
   question?: true
   sender?: true
   sentAt?: true
+  visible?: true
   answerId?: true
   _all?: true
 }
@@ -184,6 +190,7 @@ export type QuestionGroupByOutputType = {
   question: string
   sender: string
   sentAt: Date
+  visible: boolean
   answerId: string | null
   _count: QuestionCountAggregateOutputType | null
   _avg: QuestionAvgAggregateOutputType | null
@@ -215,6 +222,7 @@ export type QuestionWhereInput = {
   question?: Prisma.StringFilter<"Question"> | string
   sender?: Prisma.StringFilter<"Question"> | string
   sentAt?: Prisma.DateTimeFilter<"Question"> | Date | string
+  visible?: Prisma.BoolFilter<"Question"> | boolean
   answerId?: Prisma.StringNullableFilter<"Question"> | string | null
   answer?: Prisma.XOR<Prisma.AnswerNullableScalarRelationFilter, Prisma.AnswerWhereInput> | null
 }
@@ -224,6 +232,7 @@ export type QuestionOrderByWithRelationInput = {
   question?: Prisma.SortOrder
   sender?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  visible?: Prisma.SortOrder
   answerId?: Prisma.SortOrderInput | Prisma.SortOrder
   answer?: Prisma.AnswerOrderByWithRelationInput
 }
@@ -236,6 +245,7 @@ export type QuestionWhereUniqueInput = Prisma.AtLeast<{
   question?: Prisma.StringFilter<"Question"> | string
   sender?: Prisma.StringFilter<"Question"> | string
   sentAt?: Prisma.DateTimeFilter<"Question"> | Date | string
+  visible?: Prisma.BoolFilter<"Question"> | boolean
   answerId?: Prisma.StringNullableFilter<"Question"> | string | null
   answer?: Prisma.XOR<Prisma.AnswerNullableScalarRelationFilter, Prisma.AnswerWhereInput> | null
 }, "id">
@@ -245,6 +255,7 @@ export type QuestionOrderByWithAggregationInput = {
   question?: Prisma.SortOrder
   sender?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  visible?: Prisma.SortOrder
   answerId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.QuestionCountOrderByAggregateInput
   _avg?: Prisma.QuestionAvgOrderByAggregateInput
@@ -261,6 +272,7 @@ export type QuestionScalarWhereWithAggregatesInput = {
   question?: Prisma.StringWithAggregatesFilter<"Question"> | string
   sender?: Prisma.StringWithAggregatesFilter<"Question"> | string
   sentAt?: Prisma.DateTimeWithAggregatesFilter<"Question"> | Date | string
+  visible?: Prisma.BoolWithAggregatesFilter<"Question"> | boolean
   answerId?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
 }
 
@@ -268,6 +280,7 @@ export type QuestionCreateInput = {
   question: string
   sender: string
   sentAt?: Date | string
+  visible?: boolean
   answer?: Prisma.AnswerCreateNestedOneWithoutQuestionsInput
 }
 
@@ -276,6 +289,7 @@ export type QuestionUncheckedCreateInput = {
   question: string
   sender: string
   sentAt?: Date | string
+  visible?: boolean
   answerId?: string | null
 }
 
@@ -283,6 +297,7 @@ export type QuestionUpdateInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   sender?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   answer?: Prisma.AnswerUpdateOneWithoutQuestionsNestedInput
 }
 
@@ -291,6 +306,7 @@ export type QuestionUncheckedUpdateInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   sender?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   answerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -299,6 +315,7 @@ export type QuestionCreateManyInput = {
   question: string
   sender: string
   sentAt?: Date | string
+  visible?: boolean
   answerId?: string | null
 }
 
@@ -306,6 +323,7 @@ export type QuestionUpdateManyMutationInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   sender?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visible?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type QuestionUncheckedUpdateManyInput = {
@@ -313,6 +331,7 @@ export type QuestionUncheckedUpdateManyInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   sender?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   answerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -321,6 +340,7 @@ export type QuestionCountOrderByAggregateInput = {
   question?: Prisma.SortOrder
   sender?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  visible?: Prisma.SortOrder
   answerId?: Prisma.SortOrder
 }
 
@@ -333,6 +353,7 @@ export type QuestionMaxOrderByAggregateInput = {
   question?: Prisma.SortOrder
   sender?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  visible?: Prisma.SortOrder
   answerId?: Prisma.SortOrder
 }
 
@@ -341,6 +362,7 @@ export type QuestionMinOrderByAggregateInput = {
   question?: Prisma.SortOrder
   sender?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  visible?: Prisma.SortOrder
   answerId?: Prisma.SortOrder
 }
 
@@ -360,6 +382,10 @@ export type QuestionOrderByRelationAggregateInput = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -412,6 +438,7 @@ export type QuestionCreateWithoutAnswerInput = {
   question: string
   sender: string
   sentAt?: Date | string
+  visible?: boolean
 }
 
 export type QuestionUncheckedCreateWithoutAnswerInput = {
@@ -419,6 +446,7 @@ export type QuestionUncheckedCreateWithoutAnswerInput = {
   question: string
   sender: string
   sentAt?: Date | string
+  visible?: boolean
 }
 
 export type QuestionCreateOrConnectWithoutAnswerInput = {
@@ -455,6 +483,7 @@ export type QuestionScalarWhereInput = {
   question?: Prisma.StringFilter<"Question"> | string
   sender?: Prisma.StringFilter<"Question"> | string
   sentAt?: Prisma.DateTimeFilter<"Question"> | Date | string
+  visible?: Prisma.BoolFilter<"Question"> | boolean
   answerId?: Prisma.StringNullableFilter<"Question"> | string | null
 }
 
@@ -463,12 +492,14 @@ export type QuestionCreateManyAnswerInput = {
   question: string
   sender: string
   sentAt?: Date | string
+  visible?: boolean
 }
 
 export type QuestionUpdateWithoutAnswerInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   sender?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visible?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type QuestionUncheckedUpdateWithoutAnswerInput = {
@@ -476,6 +507,7 @@ export type QuestionUncheckedUpdateWithoutAnswerInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   sender?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visible?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type QuestionUncheckedUpdateManyWithoutAnswerInput = {
@@ -483,6 +515,7 @@ export type QuestionUncheckedUpdateManyWithoutAnswerInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   sender?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  visible?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -492,6 +525,7 @@ export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   question?: boolean
   sender?: boolean
   sentAt?: boolean
+  visible?: boolean
   answerId?: boolean
   answer?: boolean | Prisma.Question$answerArgs<ExtArgs>
 }, ExtArgs["result"]["question"]>
@@ -501,6 +535,7 @@ export type QuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   question?: boolean
   sender?: boolean
   sentAt?: boolean
+  visible?: boolean
   answerId?: boolean
   answer?: boolean | Prisma.Question$answerArgs<ExtArgs>
 }, ExtArgs["result"]["question"]>
@@ -510,6 +545,7 @@ export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   question?: boolean
   sender?: boolean
   sentAt?: boolean
+  visible?: boolean
   answerId?: boolean
   answer?: boolean | Prisma.Question$answerArgs<ExtArgs>
 }, ExtArgs["result"]["question"]>
@@ -519,10 +555,11 @@ export type QuestionSelectScalar = {
   question?: boolean
   sender?: boolean
   sentAt?: boolean
+  visible?: boolean
   answerId?: boolean
 }
 
-export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "question" | "sender" | "sentAt" | "answerId", ExtArgs["result"]["question"]>
+export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "question" | "sender" | "sentAt" | "visible" | "answerId", ExtArgs["result"]["question"]>
 export type QuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   answer?: boolean | Prisma.Question$answerArgs<ExtArgs>
 }
@@ -543,6 +580,7 @@ export type $QuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     question: string
     sender: string
     sentAt: Date
+    visible: boolean
     answerId: string | null
   }, ExtArgs["result"]["question"]>
   composites: {}
@@ -972,6 +1010,7 @@ export interface QuestionFieldRefs {
   readonly question: Prisma.FieldRef<"Question", 'String'>
   readonly sender: Prisma.FieldRef<"Question", 'String'>
   readonly sentAt: Prisma.FieldRef<"Question", 'DateTime'>
+  readonly visible: Prisma.FieldRef<"Question", 'Boolean'>
   readonly answerId: Prisma.FieldRef<"Question", 'String'>
 }
     

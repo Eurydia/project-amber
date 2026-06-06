@@ -7,7 +7,11 @@ import type { FC } from "react";
 
 export const QnaCard: FC<{
   data: {
-    questions: Array<{ id: string; question: string; visible: boolean }>;
+    questions: Array<{
+      id: string | number;
+      question: string;
+      visible: boolean;
+    }>;
     answer: null | string;
   };
 }> = (props) => {

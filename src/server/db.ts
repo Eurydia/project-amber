@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import z from "zod";
+import { QuestionList } from "#/components/question-list";
 import { prisma } from "#/db";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 
@@ -72,11 +73,19 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
       {
         id: string;
         answer: string | null;
-        questions: Array<{ id: string; question: string }>;
+        questions: Array<{
+          id: string | number;
+          question: string;
+          visible: boolean;
+        }>;
       }
     >();
     const result: Array<{
-      questions: Array<{ id: string; question: string }>;
+      questions: Array<{
+        id: string | number;
+        question: string;
+        visible: boolean;
+      }>;
       answer: string | null;
       id: string;
     }> = [];
@@ -91,7 +100,7 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
     })) {
       if (row.answerId === null) {
         result.push({
-          questions: [{ id: String(row.id), question: row.question }],
+          questions: [row],
           answer: null,
           id: String(row.id),
         });
@@ -99,12 +108,12 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
       }
       const g = group.get(row.answerId);
       if (g !== undefined) {
-        g.questions.push({ id: String(row.id), question: row.question });
+        g.questions.push(row);
       } else {
         group.set(row.answerId, {
           id: String(row.id),
           answer: row.answer?.answer ?? null,
-          questions: [{ id: String(row.id), question: row.question }],
+          questions: [row],
         });
       }
     }
