@@ -13,13 +13,10 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import dayjs from "dayjs";
-import dayjsRelTime from "dayjs/plugin/relativeTime";
+import { toast } from "react-toastify";
 import { ThemedToastContainer } from "#/components/toast/themed-toast-container";
 import { MAIN_THEME } from "#/theme/main";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
-dayjs.extend(dayjsRelTime);
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -47,6 +44,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
+  onError: (err) => {
+    toast.error(String(err));
+  },
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
@@ -61,10 +61,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <ThemeProvider theme={MAIN_THEME}>
             <CssBaseline />
             {children}
-            <ThemedToastContainer
-              closeOnClick
-              style={{ fontFamily: `"Roboto variable"`, userSelect: "none" }}
-            />
+            <ThemedToastContainer />
           </ThemeProvider>
         </CacheProvider>
         <TanStackDevtools

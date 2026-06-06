@@ -9,8 +9,6 @@ export const authService = betterAuth({
       clientSecret: import.meta.env.VITE_GOOGLE_CLIENT_SECRET,
       prompt: "select_account",
       mapProfileToUser: (profile) => {
-        console.debug(profile);
-
         if (
           profile.hd !== "ayw.ac.th" &&
           profile.email !== import.meta.env.VITE_APP_ADMIN_EMAIL

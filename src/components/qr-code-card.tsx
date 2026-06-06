@@ -1,8 +1,8 @@
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
-import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
@@ -40,7 +40,7 @@ export const QRCodeCard: FC<{
                 window.navigator.clipboard
                   .writeText(props.value)
                   .then(() => {
-                    toast.success("Link copied", { autoClose: false });
+                    toast.success("Link copied");
                   })
                   .catch(() => {
                     toast.error("Couldn't copy link");
@@ -51,27 +51,17 @@ export const QRCodeCard: FC<{
             </IconButton>
           </Tooltip>
         </Stack>
-        <Paper
-          variant="outlined"
-          sx={{
-            padding: 3,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+        <QRCodeSVG
+          bgColor={t.palette.background.paper}
+          value={props.value}
+          level="H"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            maxWidth: "min(50dvw, 50dvh)",
           }}
-        >
-          <QRCodeSVG
-            bgColor={t.palette.background.paper}
-            value={props.value}
-            level="H"
-            style={{
-              width: "100%",
-              height: "auto",
-              display: "block",
-              maxWidth: "min(50dvw, 50dvh)",
-            }}
-          />
-        </Paper>
+        />
       </Stack>
     );
   }
@@ -86,47 +76,45 @@ export const QRCodeCard: FC<{
           </Typography>
           <Stack
             direction={"row"}
-            spacing={2}
             useFlexGap
-            sx={{ alignItems: "center" }}
+            spacing={1}
+            sx={{ alignItems: "center", flexWrap: "wrap" }}
           >
             <Typography color="textDisabled" sx={{ fontFamily: "monospace" }}>
               {props.value}
             </Typography>
-            <Button
-              disableTouchRipple
-              variant="outlined"
-              onClick={() => {
-                window.navigator.clipboard
-                  .writeText(props.value)
-                  .then(() => {
-                    toast.success("Link copied", { autoClose: false });
-                  })
-                  .catch(() => {
-                    toast.error("Couldn't copy link");
-                  });
-              }}
-              endIcon={<ContentCopyRoundedIcon />}
-            >
-              {`copy link`}
-            </Button>
+            <Tooltip title={<Typography>{`Copy link`}</Typography>}>
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  window.navigator.clipboard
+                    .writeText(props.value)
+                    .then(() => {
+                      toast.success("Link copied");
+                    })
+                    .catch(() => {
+                      toast.error("Couldn't copy link");
+                    });
+                }}
+              >
+                <ContentCopyRoundedIcon />
+              </IconButton>
+            </Tooltip>
           </Stack>
         </Stack>
       </Grid>
       <Grid size={{ md: "grow", xs: 12 }}>
-        <Paper variant="outlined" sx={{ padding: 3 }}>
-          <QRCodeSVG
-            bgColor={t.palette.background.paper}
-            value={props.value}
-            level="H"
-            style={{
-              width: "100%",
-              height: "auto",
-              display: "block",
-              maxWidth: "min(50dvw, 50dvh)",
-            }}
-          />
-        </Paper>
+        <QRCodeSVG
+          bgColor={t.palette.background.paper}
+          value={props.value}
+          level="H"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            maxWidth: "min(50dvw, 50dvh)",
+          }}
+        />
       </Grid>
     </Grid>
   );
