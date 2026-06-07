@@ -9,8 +9,9 @@ import type { FC } from "react";
 import z from "zod";
 
 export const QNAForm: FC<{
-  disable: boolean;
   onSubmit: (v: string) => unknown;
+  limited?: boolean;
+  disabled?: boolean;
 }> = (props) => {
   const form = useForm({
     defaultValues: {
@@ -45,7 +46,7 @@ export const QNAForm: FC<{
       <form.Field name="question">
         {(field) => (
           <TextField
-            disabled={props.disable}
+            disabled={props.limited || props.disabled}
             fullWidth
             type="text"
             error={!field.state.meta.isValid}
@@ -54,23 +55,29 @@ export const QNAForm: FC<{
             multiline
             minRows={4}
             placeholder={
-              props.disable
-                ? `There is no active Q&A session. Drop your question here when the question box is open.`
-                : "How's the weather like in Budapest?"
+              props.limited
+                ? "You cannot send another question in this session. Your existing questions will stay visible below, including any answers that are added later."
+                : props.disabled
+                  ? `There is no active Q&A session. Drop your question here when the question box is open.`
+                  : "How's the weather like in Budapest?"
             }
             slotProps={{
               input: {
                 sx: {
-                  background: props.disable
-                    ? `repeating-linear-gradient(-45deg,rgba(135,109,100,.022),rgba(135,109,100,.022) 8px,transparent 8px,transparent 17px),rgba(255,253,244,.56)`
-                    : undefined,
+                  background:
+                    props.disabled || props.limited
+                      ? `repeating-linear-gradient(-45deg,rgba(135,109,100,.022),rgba(135,109,100,.022) 8px,transparent 8px,transparent 17px),rgba(255,253,244,.56)`
+                      : undefined,
                 },
                 slotProps: {
                   notchedOutline: {
                     sx: {
-                      borderStyle: props.disable ? "dashed" : undefined,
+                      borderStyle:
+                        props.disabled || props.limited ? "dashed" : undefined,
                       borderColor: (t) =>
-                        props.disable ? t.palette.action.disabled : undefined,
+                        props.disabled || props.limited
+                          ? t.palette.action.disabled
+                          : undefined,
                     },
                   },
                 },
@@ -113,15 +120,8 @@ export const QNAForm: FC<{
         >
           {({ canSubmit, isValid }) => (
             <Button
-              sx={{
-                textDecorationLine:
-                  !canSubmit || !isValid || props.disable
-                    ? "line-through"
-                    : undefined,
-                textDecorationThickness: 4,
-              }}
               endIcon={
-                !canSubmit || !isValid || props.disable ? (
+                !canSubmit || !isValid || props.disabled || props.limited ? (
                   <CancelScheduleSendIcon />
                 ) : (
                   <SendIcon />
@@ -129,7 +129,9 @@ export const QNAForm: FC<{
               }
               variant="contained"
               type="submit"
-              disabled={!canSubmit || !isValid || props.disable}
+              disabled={
+                !canSubmit || !isValid || props.disabled || props.limited
+              }
             >
               {"SEND"}
             </Button>

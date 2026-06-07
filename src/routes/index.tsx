@@ -97,7 +97,8 @@ function Home() {
                   <Card variant="outlined">
                     <CardContent>
                       <QNAForm
-                        disable={!data.qnaStatus.qnaOpen}
+                        limited={data.submissions.length > 5}
+                        disabled={!data.qnaStatus.qnaOpen}
                         onSubmit={(value) => {
                           handleSubmit({ data: { question: value } }).then(
                             (res) => {

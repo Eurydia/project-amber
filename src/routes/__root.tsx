@@ -13,10 +13,14 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import { toast } from "react-toastify";
 import { ThemedToastContainer } from "#/components/toast/themed-toast-container";
 import { MAIN_THEME } from "#/theme/main";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
+
+dayjs.extend(advancedFormat);
 
 interface MyRouterContext {
   queryClient: QueryClient;

@@ -1,6 +1,4 @@
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";

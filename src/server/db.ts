@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import z from "zod";
-import { QuestionList } from "#/components/question-list";
 import { prisma } from "#/db";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 
@@ -17,9 +16,20 @@ export const submitQuestion = createServerFn({ method: "POST" })
       return false;
     }
 
-    return await prisma.question.create({
-      data: { question: data.question, sender: session.user.email },
+    const submissions = await getQuestionsFromPerson({
+      data: { id: session.user.email },
     });
+
+    if (submissions.length > 5) {
+      return false;
+    }
+
+    await prisma.question
+      .create({
+        data: { question: data.question, sender: session.user.email },
+      })
+      .then(() => true)
+      .catch(() => false);
   });
 export const getQuestionsFromPerson = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().nonempty() }))
