@@ -24,12 +24,15 @@ export const submitQuestion = createServerFn({ method: "POST" })
       return false;
     }
 
-    await prisma.question
+    return prisma.question
       .create({
         data: { question: data.question, sender: session.user.email },
       })
       .then(() => true)
-      .catch(() => false);
+      .catch((err) => {
+        console.debug(err);
+        return false;
+      });
   });
 export const getQuestionsFromPerson = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().nonempty() }))
@@ -57,7 +60,10 @@ export const getQnaSession = createServerFn({ method: "GET" }).handler(
       .findFirst({
         orderBy: { createdAt: "desc" },
       })
-      .catch(() => null);
+      .catch((e) => {
+        console.debug(e);
+        return null;
+      });
 
     if (res === null) {
       return { qnaOpen: false, openAt: null };

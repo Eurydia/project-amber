@@ -103,9 +103,9 @@ function Home() {
                           handleSubmit({ data: { question: value } }).then(
                             (res) => {
                               if (!res) {
-                                toast.error("ERR");
+                                toast.error("Something went wrong :(");
                               } else {
-                                toast.success("OK");
+                                toast.success("Question sent!");
                                 router.invalidate();
                               }
                             },

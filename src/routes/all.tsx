@@ -27,7 +27,7 @@ export const Route = createFileRoute("/all")({
     const submissions = await getQuestionsFromPerson({
       data: { id: session.user.email },
     });
-    if (submissions.length === 0) {
+    if (import.meta.env.PROD && submissions.length === 0) {
       throw redirect({ to: "/" });
     }
     return { session };
