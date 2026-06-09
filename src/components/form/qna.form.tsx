@@ -23,7 +23,8 @@ export const QNAForm: FC<{
         question: z.string().normalize().nonempty().max(200),
       }),
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value,formApi }) => {
+      formApi.reset();
       return props.onSubmit(value.question);
     },
   });
