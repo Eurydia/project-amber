@@ -1,11 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import z from "zod";
+import { QuestionList } from "#/components/question-list";
 import { prisma } from "#/db";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 
 export const submitQuestion = createServerFn({ method: "POST" })
-  .inputValidator(
+  .validator(
     z.object({
       question: z.string().nonempty().trim().normalize().max(200),
     }),
@@ -35,7 +36,7 @@ export const submitQuestion = createServerFn({ method: "POST" })
       });
   });
 export const getQuestionsFromPerson = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ id: z.string().nonempty() }))
+  .validator(z.object({ id: z.string().nonempty() }))
   .handler(async ({ data }) => {
     const res = await prisma.question
       .findMany({
@@ -45,10 +46,10 @@ export const getQuestionsFromPerson = createServerFn({ method: "GET" })
         },
       })
       .catch(() => []);
-    return res.map(({ answer, id, question }) => ({
-      id: String(id),
-      answer: answer?.answer ?? null,
-      questions: [{ question, id: String(id) }],
+    return res.map((entry) => ({
+      id: entry.id,
+      answer: entry.answer?.answer ?? null,
+      questions: [entry],
     }));
   });
 
@@ -82,7 +83,7 @@ export const getQnaSession = createServerFn({ method: "GET" }).handler(
 );
 
 export const getAggregatedQuestions = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ page: z.number().int().nonnegative() }))
+  .validator(z.object({ page: z.number().int().nonnegative() }))
   .handler(async ({ data }) => {
     const group = new Map<
       string,
@@ -142,3 +143,59 @@ export const getAggregatedQuestions = createServerFn({ method: "GET" })
       currPageIndex: data.page,
     };
   });
+
+export const getQuestions = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const group = new Map<
+      string,
+      {
+        id: string;
+        answer: string | null;
+        questions: Array<{
+          id: string | number;
+          question: string;
+          visible: boolean;
+        }>;
+      }
+    >();
+    const result: Array<{
+      questions: Array<{
+        id: string | number;
+        question: string;
+        visible: boolean;
+      }>;
+      answer: string | null;
+      id: string;
+    }> = [];
+
+    for (const row of await prisma.question.findMany({
+      include: { answer: true },
+      orderBy: {
+        sentAt: "desc",
+      },
+    })) {
+      if (row.answerId === null) {
+        result.push({
+          questions: [row],
+          answer: null,
+          id: String(row.id),
+        });
+        continue;
+      }
+      const g = group.get(row.answerId);
+      if (g !== undefined) {
+        g.questions.push(row);
+      } else {
+        group.set(row.answerId, {
+          id: String(row.id),
+          answer: row.answer?.answer ?? null,
+          questions: [row],
+        });
+      }
+    }
+
+    result.push(...group.values());
+
+    return result;
+  },
+);

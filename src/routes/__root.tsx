@@ -5,17 +5,19 @@ import fontsourceVariableFrauncesCss from "@fontsource-variable/fraunces?url";
 import fontsourceVariableRobotoCss from "@fontsource-variable/roboto?url";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
   HeadContent,
+  redirect,
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
-import { toast } from "react-toastify";
 import { ThemedToastContainer } from "#/components/toast/themed-toast-container";
 import { MAIN_THEME } from "#/theme/main";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
@@ -37,7 +39,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Korn's Q&A | SUEA TALK 2026",
+        title: "P'Jeng`s Q&A | SUEA TALK 2026",
       },
     ],
     links: [
@@ -48,8 +50,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
-  onError: (err) => {
-    toast.error(String(err));
+  notFoundComponent: () => {
+    throw redirect({ to: "/" });
   },
 });
 
@@ -64,11 +66,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <CacheProvider value={emotionCache}>
           <ThemeProvider theme={MAIN_THEME}>
             <CssBaseline />
-            {children}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {children}
+            </LocalizationProvider>
             <ThemedToastContainer />
           </ThemeProvider>
         </CacheProvider>
-        <TanStackDevtools
+        {/* <TanStackDevtools
           config={{
             position: "bottom-left",
           }}
@@ -79,7 +83,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             },
             TanStackQueryDevtools,
           ]}
-        />
+        /> */}
         <Scripts />
       </body>
     </html>

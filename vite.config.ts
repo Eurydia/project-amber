@@ -5,15 +5,19 @@ import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
-const config = defineConfig({
+const config = defineConfig(({ mode }) => ({
   resolve: { tsconfigPaths: true },
   plugins: [
     devtools(),
     nitro(),
-    tanstackStart(),
+    tanstackStart({
+      router: {
+        routeFileIgnorePrefix: mode === "production" ? "dev" : undefined,
+      },
+    }),
     viteReact(),
     babel({ presets: [reactCompilerPreset()] }),
   ],
-});
+}));
 
 export default config;

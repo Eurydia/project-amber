@@ -1,8 +1,10 @@
+import ArrowRightAltRoundedIcon from "@mui/icons-material/ArrowRightAltRounded";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
 import Fab from "@mui/material/Fab";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -19,6 +21,7 @@ import { QNAForm } from "#/components/form/qna.form";
 import { GridPatch } from "#/components/grid-patch";
 import { QRCodeCard } from "#/components/qr-code-card";
 import { QuestionList } from "#/components/question-list";
+import { RouterButton } from "#/components/router-button";
 import { getServerAuthSession } from "#/integrations/auth/auth";
 import { signOutGoogle } from "#/integrations/auth/auth-client";
 import {
@@ -28,7 +31,6 @@ import {
 } from "#/server/db";
 
 export const Route = createFileRoute("/")({
-  ssr: false,
   component: Home,
   beforeLoad: async () => {
     const session = await getServerAuthSession();
@@ -40,14 +42,14 @@ export const Route = createFileRoute("/")({
     }
 
     const qnaSession = await getQnaSession();
-    const res = await getQuestionsFromPerson({
+    const submissions = await getQuestionsFromPerson({
       data: { id: context.session.user.email },
     });
 
     return {
       data: {
         qnaStatus: qnaSession,
-        submissions: res,
+        submissions: submissions,
       },
     };
   },
@@ -115,13 +117,37 @@ function Home() {
                     </CardContent>
                   </Card>
                   {data.submissions.length > 0 && (
-                    <QuestionList submissions={data.submissions} />
+                    <Card variant="outlined">
+                      <Stack spacing={3}>
+                        <CardContent>
+                          <Stack
+                            spacing={3}
+                            useFlexGap
+                            sx={{ alignItems: "flex-start" }}
+                          >
+                            <Typography variant="h2">{`My questions`}</Typography>
+                            <RouterButton
+                              disableTouchRipple
+                              variant="outlined"
+                              endIcon={<ArrowRightAltRoundedIcon />}
+                              to="/all"
+                            >
+                              {`SEE OTHER QUESTIONS`}
+                            </RouterButton>
+                          </Stack>
+                        </CardContent>
+                        <Divider flexItem />
+                        <CardContent>
+                          <QuestionList submissions={data.submissions} />
+                        </CardContent>
+                      </Stack>
+                    </Card>
                   )}
                 </Stack>
               </Grid>
               <Grid size={{ md: 4, xs: 12 }}>
                 <Paper variant="outlined" sx={{ padding: 3 }}>
-                  <QRCodeCard compact value={window.location.href} />
+                  <QRCodeCard compact value={import.meta.env.VITE_APP_ORIGIN} />
                 </Paper>
               </Grid>
             </Grid>
