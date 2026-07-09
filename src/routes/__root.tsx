@@ -18,6 +18,13 @@ import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { ThemedToastContainer } from "#/components/toast/themed-toast-container";
 import { MAIN_THEME } from "#/theme/main";
+import {
+  EVENT_NAME,
+  getCanonicalUrl,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+} from "#/utils/seo";
 
 dayjs.extend(advancedFormat);
 
@@ -36,7 +43,61 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "P'Jeng`s Q&A | SUEA TALK 2026",
+        title: SITE_TITLE,
+      },
+      {
+        name: "description",
+        content: SITE_DESCRIPTION,
+      },
+      {
+        name: "robots",
+        content: "index,follow",
+      },
+      {
+        name: "theme-color",
+        content: "#FBF7E8",
+      },
+      {
+        property: "og:site_name",
+        content: SITE_NAME,
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:title",
+        content: SITE_TITLE,
+      },
+      {
+        property: "og:description",
+        content: SITE_DESCRIPTION,
+      },
+      {
+        property: "og:url",
+        content: getCanonicalUrl("/all"),
+      },
+      {
+        name: "twitter:card",
+        content: "summary",
+      },
+      {
+        name: "twitter:title",
+        content: SITE_TITLE,
+      },
+      {
+        name: "twitter:description",
+        content: SITE_DESCRIPTION,
+      },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: SITE_NAME,
+          alternateName: EVENT_NAME,
+          url: getCanonicalUrl("/all"),
+          description: SITE_DESCRIPTION,
+        },
       },
     ],
     links: [
@@ -44,6 +105,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { rel: "stylesheet", href: fontsourceVariableDmsansCss },
       { rel: "stylesheet", href: fontsourceVariableFrauncesCss },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "canonical", href: getCanonicalUrl("/all") },
     ],
   }),
   shellComponent: RootDocument,
@@ -55,7 +117,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootDocument({ children }: { children: React.ReactNode }) {
   const emotionCache = createEmotionCache({ key: "css" });
   return (
-    <html lang="en">
+    <html lang="th">
       <head>
         <HeadContent />
       </head>

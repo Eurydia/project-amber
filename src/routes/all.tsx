@@ -7,8 +7,61 @@ import { createFileRoute } from "@tanstack/react-router";
 import { GridPatch } from "#/components/grid-patch";
 import { QnaCard } from "#/components/qna-card";
 import { getAggregatedQuestions } from "#/server/db";
+import {
+  EVENT_NAME,
+  getCanonicalUrl,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+} from "#/utils/seo";
 
 export const Route = createFileRoute("/all")({
+  head: () => ({
+    meta: [
+      {
+        title: SITE_TITLE,
+      },
+      {
+        name: "description",
+        content: SITE_DESCRIPTION,
+      },
+      {
+        property: "og:title",
+        content: SITE_TITLE,
+      },
+      {
+        property: "og:description",
+        content: SITE_DESCRIPTION,
+      },
+      {
+        property: "og:url",
+        content: getCanonicalUrl("/all"),
+      },
+      {
+        name: "twitter:title",
+        content: SITE_TITLE,
+      },
+      {
+        name: "twitter:description",
+        content: SITE_DESCRIPTION,
+      },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "QAPage",
+          name: SITE_TITLE,
+          about: EVENT_NAME,
+          isPartOf: {
+            "@type": "WebSite",
+            name: SITE_NAME,
+            url: getCanonicalUrl("/all"),
+          },
+          description: SITE_DESCRIPTION,
+        },
+      },
+    ],
+    links: [{ rel: "canonical", href: getCanonicalUrl("/all") }],
+  }),
   component: RouteComponent,
   beforeLoad: async () => {
     // const session = await getServerAuthSession();
@@ -37,7 +90,7 @@ export const Route = createFileRoute("/all")({
 });
 
 function RouteComponent() {
-  const {result} = Route.useLoaderData();
+  const { result } = Route.useLoaderData();
   // const nav = Route.useNavigate();
   // const { session } = Route.useRouteContext();
   // const router = useRouter();

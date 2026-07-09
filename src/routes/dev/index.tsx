@@ -22,6 +22,7 @@ import { GridPatch } from "#/components/grid-patch";
 import { QuestionList } from "#/components/question-list";
 import { prisma } from "#/db";
 import { getQuestions } from "#/server/db";
+import { SITE_TITLE } from "#/utils/seo";
 
 const getSessions = createServerFn().handler(async () => {
   return prisma.qnaSession.findMany({
@@ -48,6 +49,17 @@ const submitSession = createServerFn({ method: "POST" })
   });
 
 export const Route = createFileRoute("/dev/")({
+  head: () => ({
+    meta: [
+      {
+        title: `Developer tools | ${SITE_TITLE}`,
+      },
+      {
+        name: "robots",
+        content: "noindex,nofollow,noarchive",
+      },
+    ],
+  }),
   component: RouteComponent,
   loader: async () => {
     const sessions = await getSessions();

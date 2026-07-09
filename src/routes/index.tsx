@@ -7,27 +7,27 @@ import { GridPatch } from "#/components/grid-patch";
 export const Route = createFileRoute("/")({
   component: Home,
   beforeLoad: async () => {
-    throw redirect({to:"/all"})
+    throw redirect({ to: "/all", statusCode: 301 });
     // const session = await getServerAuthSession();
     // return { session };
   },
   // loader: async () => {
-      // return { data: null };
-    // if (context.session === null) {
-    //   return { data: null };
-    // }
+  // return { data: null };
+  // if (context.session === null) {
+  //   return { data: null };
+  // }
 
-    // const qnaSession = await getQnaSession();
-    // const submissions = await getQuestionsFromPerson({
-    //   data: { id: context.session.user.email },
-    // });
+  // const qnaSession = await getQnaSession();
+  // const submissions = await getQuestionsFromPerson({
+  //   data: { id: context.session.user.email },
+  // });
 
-    // return {
-    //   data: {
-    //     qnaStatus: qnaSession,
-    //     submissions: submissions,
-    //   },
-    // };
+  // return {
+  //   data: {
+  //     qnaStatus: qnaSession,
+  //     submissions: submissions,
+  //   },
+  // };
   // },
 });
 
