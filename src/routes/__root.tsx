@@ -7,7 +7,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
@@ -15,12 +14,10 @@ import {
   redirect,
   Scripts,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { ThemedToastContainer } from "#/components/toast/themed-toast-container";
 import { MAIN_THEME } from "#/theme/main";
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
 dayjs.extend(advancedFormat);
 

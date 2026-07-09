@@ -1,57 +1,46 @@
-import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
-import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Fab from "@mui/material/Fab";
-import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
-import z from "zod";
+import { createFileRoute } from "@tanstack/react-router";
 import { GridPatch } from "#/components/grid-patch";
 import { QnaCard } from "#/components/qna-card";
-import { RouterButton } from "#/components/router-button";
-import { getServerAuthSession } from "#/integrations/auth/auth";
-import { signOutGoogle } from "#/integrations/auth/auth-client";
-import { getAggregatedQuestions, getQuestionsFromPerson } from "#/server/db";
+import { getAggregatedQuestions } from "#/server/db";
 
 export const Route = createFileRoute("/all")({
   component: RouteComponent,
   beforeLoad: async () => {
-    const session = await getServerAuthSession();
-    if (session === null) {
-      throw redirect({ to: "/" });
-    }
-    const submissions = await getQuestionsFromPerson({
-      data: { id: session.user.email },
-    });
-    if (import.meta.env.PROD && submissions.length === 0) {
-      throw redirect({ to: "/" });
-    }
-    return { session };
+    // const session = await getServerAuthSession();
+    // if (session === null) {
+    //   throw redirect({ to: "/" });
+    // }
+    // const submissions = await getQuestionsFromPerson({
+    //   data: { id: session.user.email },
+    // });
+    // if (import.meta.env.PROD && submissions.length === 0) {
+    //   throw redirect({ to: "/" });
+    // }
+    // return { session };
   },
-  validateSearch: z
-    .object({ page: z.number().int().nonnegative() })
-    .partial()
-    .optional(),
-  loaderDeps: ({ search }) => {
-    return { search };
-  },
-  loader: async ({ deps }) => {
-    const res = await getAggregatedQuestions({
-      data: { page: deps.search?.page ?? 0 },
-    });
-    return res;
+  // validateSearch: z
+  //   .object({ page: z.number().int().nonnegative() })
+  //   .partial()
+  //   .optional(),
+  // loaderDeps: ({ search }) => {
+  //   return { search };
+  // },
+  loader: async () => {
+    const res = await getAggregatedQuestions();
+    return { result: res };
   },
 });
 
 function RouteComponent() {
-  const { result, currPageIndex, totalPageCount } = Route.useLoaderData();
-  const nav = Route.useNavigate();
-  const { session } = Route.useRouteContext();
-  const router = useRouter();
+  const {result} = Route.useLoaderData();
+  // const nav = Route.useNavigate();
+  // const { session } = Route.useRouteContext();
+  // const router = useRouter();
   return (
     <>
       <GridPatch />
@@ -60,7 +49,7 @@ function RouteComponent() {
         variant="dense"
       >
         <Typography variant="caption">{`P'JENG\`s Q&A \u2022 SUEA TALK 2026`}</Typography>
-        {session !== null && (
+        {/* {session !== null && (
           <Tooltip title={"Sign out"}>
             <Fab
               color="primary"
@@ -75,7 +64,7 @@ function RouteComponent() {
               <LogoutIcon />
             </Fab>
           </Tooltip>
-        )}
+        )} */}
       </Toolbar>
       <Container maxWidth="md">
         <Stack spacing={3}>
@@ -101,7 +90,7 @@ function RouteComponent() {
               </Typography>
             </span>
           </Stack>
-          <Stack direction={"row"} sx={{ alignItems: "flex-start" }}>
+          {/* <Stack direction={"row"} sx={{ alignItems: "flex-start" }}>
             <RouterButton
               disableTouchRipple
               variant="contained"
@@ -110,7 +99,7 @@ function RouteComponent() {
             >
               {`Back to my questions`}
             </RouterButton>
-          </Stack>
+          </Stack> */}
         </Stack>
         <Box sx={{ paddingY: 6 }}>
           <Stack spacing={3}>
@@ -125,7 +114,7 @@ function RouteComponent() {
                 </Box>
               ))
             )}
-            {totalPageCount > 0 && (
+            {/* {totalPageCount > 0 && (
               <Toolbar
                 disableGutters
                 variant="dense"
@@ -139,7 +128,7 @@ function RouteComponent() {
                   }}
                 />
               </Toolbar>
-            )}
+            )} */}
           </Stack>
         </Box>
       </Container>
