@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import z from "zod";
 import { prisma } from "#/db";
 import { getServerAuthSession } from "#/integrations/auth/auth";
-import type { GroupedSubmissions } from "#/types/submissions";
 import { SUBMISSIONS } from "#/content/question";
 
 export const submitQuestion = createServerFn({ method: "POST" })
@@ -85,7 +84,7 @@ export const getQnaSession = createServerFn({ method: "GET" }).handler(
 
 export const getAggregatedQuestions = createServerFn({ method: "GET" })
   // .validator(z.object({ page: z.number().int().nonnegative() }))
-  .handler(async ({ data }) => {
+  .handler(async () => {
     // const group = new Map<
     //   string,
     //   {
