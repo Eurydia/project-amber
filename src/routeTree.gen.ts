@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AllRouteImport } from './routes/all'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DevIndexRouteImport } from './routes/dev/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const AllRoute = AllRouteImport.update({
@@ -24,11 +23,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DevIndexRoute = DevIndexRouteImport.update({
-  id: '/dev/',
-  path: '/dev/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -38,34 +32,30 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/all': typeof AllRoute
-  '/dev/': typeof DevIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/all': typeof AllRoute
-  '/dev': typeof DevIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/all': typeof AllRoute
-  '/dev/': typeof DevIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/all' | '/dev/' | '/api/auth/$'
+  fullPaths: '/' | '/all' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/all' | '/dev' | '/api/auth/$'
-  id: '__root__' | '/' | '/all' | '/dev/' | '/api/auth/$'
+  to: '/' | '/all' | '/api/auth/$'
+  id: '__root__' | '/' | '/all' | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AllRoute: typeof AllRoute
-  DevIndexRoute: typeof DevIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -85,13 +75,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dev/': {
-      id: '/dev/'
-      path: '/dev'
-      fullPath: '/dev/'
-      preLoaderRoute: typeof DevIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -105,7 +88,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AllRoute: AllRoute,
-  DevIndexRoute: DevIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

@@ -7,11 +7,8 @@ import type { FC } from "react";
 
 export const QnaCard: FC<{
   data: {
-    questions: Array<{
-      id: string | number;
-      question: string;
-      visible: boolean;
-    }>;
+    questions: Array<
+      string    >;
     answer: null | string;
   };
 }> = (props) => {
@@ -43,7 +40,7 @@ export const QnaCard: FC<{
             <Stack spacing={2}>
               {props.data.questions.map((question, i) => (
                 <Stack
-                  key={question.id}
+                  key={`${i}-`}
                   spacing={1}
                   direction={"row"}
                   useFlexGap
@@ -58,7 +55,7 @@ export const QnaCard: FC<{
                     color="textSecondary"
                     sx={{ textWrap: "wrap", wordBreak: "break-word" }}
                   >
-                    {question.question}
+                    {question}
                   </Typography>
                 </Stack>
               ))}
