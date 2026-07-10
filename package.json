@@ -43,7 +43,7 @@
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
     "@tanstack/router-plugin": "^1.168.13",
-    "better-auth": "1.6.11",
+    "better-auth": "1.6.13",
     "dayjs": "^1.11.21",
     "ioredis": "^5.11.1",
     "nitro": "3.0.260522-beta",
